@@ -1,7 +1,7 @@
 # Нужно провести ресерч для  опредления границы
 const BOUND_FOR_PAR_EXEC = 100
 
-function findIndex(labels::Vector{Int64}, el::Int64)::Vector{Int64}
+function findIndex(labels::AbstractVector{Int64}, el::Int64)::Vector{Int64}
     """
     Функция для нахождения индексов вхождений оопредленного элемента 
     """
@@ -11,11 +11,11 @@ function findIndex(labels::Vector{Int64}, el::Int64)::Vector{Int64}
     end 
 
     index = Vector{Int64}()
-    lock = ReentrantLock()  # Для синхронизации доступа к массиву
+    locker = ReentrantLock()  # Для синхронизации доступа к массиву
 
     @threads for j in 1:n
         if labels[j] == el
-            lock(lock) do
+            lock(locker) do
                 push!(index, j)
             end
         end

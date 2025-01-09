@@ -1,6 +1,7 @@
 include("calcNumOccur.jl")
 include("find_Dsbcs_IntOb_IntCoreDist.jl")
 include("findIndex.jl")
+include("findMinDspcs.jl")
 
 using LinearAlgebra
 using Base.Threads
@@ -36,7 +37,7 @@ function calcDBCV(
 
 
     for i in 1:uniq_val_len
-        index::Vector{Int64} = findIndex(labels, uniq_val_len[i])
+        index::Vector{Int64} = findIndex(labels, unique_values[i])
 
         dsbcs[i], internal_objects_per_cls[i], internal_core_dists[i] = find_Dsbcs_IntOb_IntCoreDist(matrix, index, d)
 
@@ -46,6 +47,18 @@ function calcDBCV(
     for i in 1:uniq_val_len
 
         for j in i+1:uniq_val_len
+            new_val_for_min_dscps = findMinDspcs(
+                matrix, 
+                internal_objects_per_cls[i], 
+                internal_objects_per_cls[j], 
+                internal_core_dists[i], 
+                internal_core_dists[j]
+            )
+
+
+            min_dspcs[i] = min(min_dspcs[i], new_val_for_min_dscps)
+            min_dspcs[j] = min(min_dspcs[j], new_val_for_min_dscps)
+
 
 
         end
@@ -53,12 +66,12 @@ function calcDBCV(
     end
 
 
+    min_dspcs = replace(min_dspcs, NaN => 0.0, Inf => 2^63 - 1, -Inf => -(2^63 - 1))
 
+    vcs = (min_dspcs .- dsbcs) ./ (1e-12 .+ max.(min_dspcs, dsbcs))
+
+    vcs = replace(vcs, NaN => 0.0, Inf => 2^63 - 1, -Inf => -(2^63 - 1))
     
-
-
-
-
-
+    return sum(vcs .* counts_for_unique)
 
 end 

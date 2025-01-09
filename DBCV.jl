@@ -7,8 +7,8 @@ include("src/calcDBCV.jl")
 function DBCV(
     data:: Matrix{Float64}, 
     labels::Vector{Int64}, 
-    noise_id::Vector{Int64}, 
-    norm::String
+    noise_id::Vector{Int64} = [-1], 
+    norm::String = "euclidean_squared"
     )::Float64
     # В рамках функции работаем с представлениям для экономии памяти - представления неизменяемы и доступны 
     # только для чтения

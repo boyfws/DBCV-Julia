@@ -15,13 +15,13 @@ function find_Dsbcs_IntOb_IntCoreDist(
 
     index - массив индексов для элементов кластера
     """
-    n::Int64 = length(n)
+    n::Int64 = length(index)
 
     core_dists = computeCoreDist(matrix, index, d)
 
     @threads for i in 1:n
         for j in i:n
-            matrix[index[i], index[j]] = max(matrix[index[i], index[j]], core_dists[i], core_dists[j])
+            matrix.data[index[i], index[j]] = max(matrix[index[i], index[j]], core_dists[i], core_dists[j])
         end 
 
     end 
@@ -36,13 +36,13 @@ function find_Dsbcs_IntOb_IntCoreDist(
     # n + 1 соотв n - ому индексу 
     # 1 соотв 0 - ому индексу 
 
-    @assert length(counts) == n - 1 "Проблема при построении mst, элемент с индексом n встречается 0 раз"
+    @assert length(counts) == n + 1 "Проблема при построении mst, элемент с индексом n встречается 0 раз"
     
 
     bool_mask_int_ob = counts .> 1
 
 
-    dsbcs = Atomic{Int64}(0)
+    dsbcs = Atomic{Float64}(0)
 
     @threads for i in 1:length(weights)
 
@@ -55,6 +55,6 @@ function find_Dsbcs_IntOb_IntCoreDist(
 
     slice_for_int_ob = view(bool_mask_int_ob, 2:n + 1)
 
-    return dsbcs, index[slice_for_int_ob], core_dists[slice_for_int_ob]
+    return dsbcs[], index[slice_for_int_ob], core_dists[slice_for_int_ob]
     
 end

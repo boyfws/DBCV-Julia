@@ -1,7 +1,7 @@
 using DataStructures
 
 function calcNumOccur(
-    data::Vector{Int64}
+    data::AbstractVector{Int64}
     )::Tuple{Vector{Int64}, Vector{Int64}}
 
     counter = OrderedDict{Int64, Int64}()

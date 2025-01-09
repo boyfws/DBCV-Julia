@@ -20,7 +20,7 @@ function prepareData(
     new_labels = @view labels[mask]
     new_data = @view data[mask, :]
 
-    dist_matrix = createDistMatrix(new_data, norm)
+    dist_matrix = createDistMatrix(new_data, norm_func)
 
 
     return dist_matrix, new_labels, d
