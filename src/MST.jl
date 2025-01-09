@@ -1,5 +1,7 @@
 using Base.Threads
 using DataStructures
+using LinearAlgebra
+
 
 function MST(
     matrix::Symmetric{Float64}, 
