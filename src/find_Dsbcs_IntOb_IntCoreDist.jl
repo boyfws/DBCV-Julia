@@ -47,7 +47,7 @@ function find_Dsbcs_IntOb_IntCoreDist(
     @threads for i in 1:length(weights)
 
         if bool_mask_int_ob[first_index[i] + 1] && bool_mask_int_ob[second_index[i] + 1]
-            atomic_min!(dsbcs, weights[i])
+            atomic_max!(dsbcs, weights[i])
         end 
 
     end
